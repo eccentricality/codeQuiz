@@ -1,6 +1,3 @@
-const quizContainer = document.getElementById("quizContainer")
-const resultsContainer = document.getElementById("resultsContainer")
-const startButton = document.getElementById("startButton")
 
 
 const quizBank = [
@@ -35,35 +32,8 @@ const quizBank = [
     
 ]
 
-window.onload = function() {
-    quizContainer.style.display = 'none';
-    resultsContainer.style.display = 'none';
-}
 
-startButton.onclick = function() {
-    if (startMenu.style.display !== 'none') {
-        startMenu.style.display = 'none';
-    }
-    else {
-        startMenu.style.display = 'block';
-
-    };
-    quizContainer.style.display = 'block';
-}
-
-// function to display the quiz
-function displayQuiz(){
-
-}
-
-// function to display the results
-function displayResults(){
-
-}
-
-
-
-// 1. start button: when clicked it starts timer and presents first question
+// 1. start button: when clicked it starts timer and shows first question
 // 2. list items for answer selections: when answer is chosen reveal correctness of answer
 // 3. keep track of the number of correct answers to be recalled for final score
 // 4. when question is answered correctly replace question with new question
