@@ -19,6 +19,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    transition: all .2s ease;
 }
 
 /* start button style */
@@ -50,6 +51,13 @@ body {
     opacity: 0;
     pointer-events: none;
     transform: translate(-50%, -50%) scale(.9);
+}
+
+#quizRules.activateDivs {
+    z-index: 5;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 /* quiz rules style */
@@ -126,6 +134,13 @@ body {
     opacity: 0;
     pointer-events: none;
     transform: translate(-50%, -50%) scale(.9);
+}
+
+#quizBody.activateDivs {
+    z-index: 5;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 /* quiz body header style */
