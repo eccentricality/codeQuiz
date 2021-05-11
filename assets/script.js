@@ -1,5 +1,7 @@
 const quizContainer = document.getElementById("quizContainer")
-const resultContainer = document.getElementById("resultContainer")
+const resultsContainer = document.getElementById("resultsContainer")
+const startButton = document.getElementById("startButton")
+
 
 const quizBank = [
     {
@@ -32,6 +34,22 @@ const quizBank = [
     },
     
 ]
+
+window.onload = function() {
+    quizContainer.style.display = 'none';
+    resultsContainer.style.display = 'none';
+}
+
+startButton.onclick = function() {
+    if (startMenu.style.display !== 'none') {
+        startMenu.style.display = 'none';
+    }
+    else {
+        startMenu.style.display = 'block';
+
+    };
+    quizContainer.style.display = 'block';
+}
 
 // function to display the quiz
 function displayQuiz(){
