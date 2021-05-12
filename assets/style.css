@@ -217,6 +217,14 @@ body {
     background: var(--snsGrayDark);
 }
 
+#answerC:empty {
+    display: none;
+}
+
+#answerD:empty {
+    display: none;
+}
+
 #quizFooter {
     display: flex;
     align-items: center;
