@@ -11,7 +11,15 @@ const answerC = document.getElementById("answerC");
 const answerD = document.getElementById("answerD");
 const totalQuestions = document.getElementById("totalQuestions");
 const answerChoices = document.querySelectorAll("choice");
+const timerClock = document.getElementById("timerTime");
 
+let quizBankIndex = 0;
+let userAnswer = null;
+let correctAnswerCount = 0;
+let fiveMinutes = 60 * 5;
+let globalTimer = null;
+
+console.log(globalTimer)
 
 // on click of start button transitions quiz rules in by adding class that reveals
 startButton.onclick = ()=>{
@@ -28,10 +36,9 @@ qrContinueButton.onclick = ()=>{
     quizRules.classList.remove("activateDivs");
     quizBody.classList.add("activateDivs");
     retrieveQuestion(0);
+    countDown(fiveMinutes);
 }
 
-let quizBankIndex = 0;
-let userAnswer = null;
 
 // changes color back to original on wrong answer
 answers.addEventListener("click", function(){
@@ -43,7 +50,20 @@ answers.addEventListener("click", function(){
 })
 
 // on choosing an answer display the next question and also flash red if answer is wrong
-answers.onclick = ()=>{
+answers.onclick = (e)=>{
+    //checks for user answer by equating clicked line item by its assigned data-value to be compared with correctAnswer value
+    userAnswer = e.target.getAttribute('data-value');
+    correctAnswer = quizBank[quizBankIndex].correctAnswer;
+
+    if(userAnswer == correctAnswer){
+        chgColorRight();
+        correctAnswerCount++;
+    }
+    if(userAnswer != correctAnswer){
+        chgColorWrong();
+        fiveMinutes -= 3;
+    }
+
     if(quizBankIndex < quizBank.length -1){
         quizBankIndex++;
         retrieveQuestion(quizBankIndex);
@@ -51,17 +71,6 @@ answers.onclick = ()=>{
     else{
         console.log("QUIZ COMPLETE")
     }
-    userAnswer = answerChoices.querySelectorAll('input[name=choice]:checked').value;
-    console.log(userAnswer);
-}
-
-// change screen color when wrong answer to change back for flashing effect
-function chgColorWrong(){
-    quizBody.style.backgroundColor = "red";
-}
-
-function chgColorRight(){
-    quizBody.style.backgroundColor = "green";
 }
 
 // retrieve questions from array of stored question objects and innerText to display in body
@@ -79,10 +88,55 @@ function retrieveQuestion(index){
     answerB.innerText = retrievedAnswerB;
     answerC.innerText = retrievedAnswerC;
     answerD.innerText = retrievedAnswerD;
-    
+
     // keeps track of question count
     totalQuestions.innerText = quizBank[index].number + " out of " + quizBank.length + " Questions"
 }
+
+// time starting function sets to duration to be filled by fiveMinutes defined on line 19
+function countDown(duration) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        timerClock.innerText = minutes + ":" + seconds;
+
+
+        if (--timer < 0) {
+            timer = duration;
+            globalTimer = duration;
+        }
+    }, 1000);
+}
+
+console.log(globalTimer)
+
+function decreaseTime(){
+
+}
+
+// change screen color when wrong answer to change back for flashing effect
+function chgColorWrong(){
+    quizBody.style.backgroundColor = "red";
+}
+
+function chgColorRight(){
+    quizBody.style.backgroundColor = "green";
+}
+
+// time starting function
+// function startClock(time){
+//     countDown = setInterval(timer, 1000);
+//     function timer(){
+//         timerClock.innerText = time;
+//         time--;
+//     }
+//     timeRemaining = time;
+// }
 
 // check if user answer is correct
 // function checkAnswer(answer){
