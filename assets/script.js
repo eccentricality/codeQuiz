@@ -1,8 +1,8 @@
-const startButton = document.getElementById("startButton")
-const quizRules = document.getElementById("quizRules")
-const qrQuitButton = document.getElementById("quitButton")
-const qrContinueButton = document.getElementById("continueButton")
-const quizBody = document.getElementById("quizBody")
+const startButton = document.getElementById("startButton");
+const quizRules = document.getElementById("quizRules");
+const qrQuitButton = document.getElementById("quitButton");
+const qrContinueButton = document.getElementById("continueButton");
+const quizBody = document.getElementById("quizBody");
 const questionText = document.getElementById("questions");
 const answers = document.getElementById("answers");
 const answerA = document.getElementById("answerA");
@@ -12,14 +12,19 @@ const answerD = document.getElementById("answerD");
 const totalQuestions = document.getElementById("totalQuestions");
 const answerChoices = document.querySelectorAll("choice");
 const timerClock = document.getElementById("timerTime");
+const quizResults = document.getElementById("quizResults");
+const resultsSaveButton = document.getElementById("resultsSave");
+const resultsRestartButton = document.getElementById("resultsSave");
+const resultsQuitButton = document.getElementById("resultsQuit");
+const resultsBest = document.getElementById("resultsBest");
+const userName = document.getElementById("userName");
+const userScore = document.getElementById("userScore");
+const userNameInput = document.getElementById("userNameInput");
 
 let quizBankIndex = 0;
 let userAnswer = null;
 let correctAnswerCount = 0;
 let fiveMinutes = 60 * 5;
-let globalTimer = null;
-
-console.log(globalTimer)
 
 // on click of start button transitions quiz rules in by adding class that reveals
 startButton.onclick = ()=>{
@@ -39,7 +44,6 @@ qrContinueButton.onclick = ()=>{
     countDown(fiveMinutes);
 }
 
-
 // changes color back to original on wrong answer
 answers.addEventListener("click", function(){
     var self = quizBody;
@@ -49,29 +53,21 @@ answers.addEventListener("click", function(){
     }, 150);
 })
 
-// on choosing an answer display the next question and also flash red if answer is wrong
-answers.onclick = (e)=>{
-    //checks for user answer by equating clicked line item by its assigned data-value to be compared with correctAnswer value
-    userAnswer = e.target.getAttribute('data-value');
-    correctAnswer = quizBank[quizBankIndex].correctAnswer;
+resultsSaveButton.addEventListener("click", function(event){
+    event.preventDefault();
+    let highScorers = [];
+    let highScoreName = userNameInput.value.trim();
 
-    if(userAnswer == correctAnswer){
-        chgColorRight();
-        correctAnswerCount++;
+    if(highScoreName === ""){
+        return;
     }
-    if(userAnswer != correctAnswer){
-        chgColorWrong();
-        fiveMinutes -= 3;
-    }
+    
+    highScorers = JSON.parse(localStorage.getItem("highScorers")) || [];
+    highScorers.push(highScoreName);
+    localStorage.setItem("highScorers", JSON.stringify(highScorers));
+    userNameInput.value = "";
 
-    if(quizBankIndex < quizBank.length -1){
-        quizBankIndex++;
-        retrieveQuestion(quizBankIndex);
-    }
-    else{
-        console.log("QUIZ COMPLETE")
-    }
-}
+})
 
 // retrieve questions from array of stored question objects and innerText to display in body
 function retrieveQuestion(index){
@@ -105,18 +101,51 @@ function countDown(duration) {
 
         timerClock.innerText = minutes + ":" + seconds;
 
-
         if (--timer < 0) {
             timer = duration;
-            globalTimer = duration;
+
         }
+        // on choosing an answer display the next question and also flash red if answer is wrong
+        answers.onclick = (e)=>{
+            //checks for user answer by equating clicked line item by its assigned data-value to be compared with correctAnswer value
+            userAnswer = e.target.getAttribute('data-value');
+            correctAnswer = quizBank[quizBankIndex].correctAnswer;
+
+            if(userAnswer == correctAnswer){
+                chgColorRight();
+                correctAnswerCount++;
+                console.log(correctAnswerCount);
+                localStorage.setItem('correctAnswers', correctAnswerCount);
+            }
+            if(userAnswer != correctAnswer){
+                chgColorWrong();
+                timer -= 3;
+            }
+
+            if(quizBankIndex < quizBank.length -1){
+                quizBankIndex++;
+                retrieveQuestion(quizBankIndex);
+            }
+            else{
+                console.log("QUIZ COMPLETE")
+                quizResultsReveal();
+                let storedNames = JSON.parse(localStorage.getItem("highScorers"))
+                console.log(storedNames[3])
+
+                for (i=0; i < storedNames.length; i++){
+                    resultsBest.innerText =  storedNames[i];
+                }
+            }
+}
     }, 1000);
+
 }
 
-console.log(globalTimer)
-
-function decreaseTime(){
-
+// end quiz and show results page with option to save results while removing quizBody
+function quizResultsReveal(){
+    quizBody.classList.remove("activateDivs");
+    quizResults.classList.add("activateDivs");
+    userScore.innerText = localStorage.getItem('correctAnswers');
 }
 
 // change screen color when wrong answer to change back for flashing effect
@@ -128,24 +157,10 @@ function chgColorRight(){
     quizBody.style.backgroundColor = "green";
 }
 
-// time starting function
-// function startClock(time){
-//     countDown = setInterval(timer, 1000);
-//     function timer(){
-//         timerClock.innerText = time;
-//         time--;
-//     }
-//     timeRemaining = time;
-// }
+// displays stored high scorers in local storage
 
-// check if user answer is correct
-// function checkAnswer(answer){
-//     let chosenAnswer = answer.innerText;
-//     let correctAnswer = quizBank[quizBankIndex].correctAnswer;
-//     console.log(chosenAnswer);
-//     console.log(correctAnswer);
-// }
-// 5. when question is answered incorrectly subtract time from timer
+
+
 // 6. if all questions are answered correctly or timer hits 0 game is over
 // 7. when game is over present input for option to store score for local storage
 
