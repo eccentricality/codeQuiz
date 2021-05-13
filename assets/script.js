@@ -10,6 +10,8 @@ const answerB = document.getElementById("answerB");
 const answerC = document.getElementById("answerC");
 const answerD = document.getElementById("answerD");
 const totalQuestions = document.getElementById("totalQuestions");
+const answerChoices = document.querySelectorAll("choice");
+
 
 // on click of start button transitions quiz rules in by adding class that reveals
 startButton.onclick = ()=>{
@@ -29,6 +31,7 @@ qrContinueButton.onclick = ()=>{
 }
 
 let quizBankIndex = 0;
+let userAnswer = null;
 
 // changes color back to original on wrong answer
 answers.addEventListener("click", function(){
@@ -48,6 +51,8 @@ answers.onclick = ()=>{
     else{
         console.log("QUIZ COMPLETE")
     }
+    userAnswer = answerChoices.querySelectorAll('input[name=choice]:checked').value;
+    console.log(userAnswer);
 }
 
 // change screen color when wrong answer to change back for flashing effect
@@ -66,6 +71,7 @@ function retrieveQuestion(index){
     let retrievedAnswerB = quizBank[index].answers.b;
     let retrievedAnswerC = quizBank[index].answers.c;
     let retrievedAnswerD = quizBank[index].answers.d;
+    let correctAnswer = quizBank[quizBankIndex].correctAnswer;
 
     // prints object definition into proper divs to present question and answer choices
     questionText.innerText = retrievedQuestion;
@@ -73,23 +79,18 @@ function retrieveQuestion(index){
     answerB.innerText = retrievedAnswerB;
     answerC.innerText = retrievedAnswerC;
     answerD.innerText = retrievedAnswerD;
+    
     // keeps track of question count
     totalQuestions.innerText = quizBank[index].number + " out of " + quizBank.length + " Questions"
-
-    // stores selected answer to be compared for correctness
-    const selected = 
-    for(i=0; i < quizBank[index]; i++){
-
-    }
 }
 
 // check if user answer is correct
-function checkAnswer(answer);
-    let chosenAnswer = answer.innerText;
-    let correctAnswer = quizBank[quizBankIndex].correctAnswer;
-    console.log(chosenAnswer);
-    console.log(correctAnswer);
-
+// function checkAnswer(answer){
+//     let chosenAnswer = answer.innerText;
+//     let correctAnswer = quizBank[quizBankIndex].correctAnswer;
+//     console.log(chosenAnswer);
+//     console.log(correctAnswer);
+// }
 // 5. when question is answered incorrectly subtract time from timer
 // 6. if all questions are answered correctly or timer hits 0 game is over
 // 7. when game is over present input for option to store score for local storage
