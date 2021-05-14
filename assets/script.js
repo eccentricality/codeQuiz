@@ -14,8 +14,7 @@ const answerChoices = document.querySelectorAll("choice");
 const timerClock = document.getElementById("timerTime");
 const quizResults = document.getElementById("quizResults");
 const resultsSaveButton = document.getElementById("resultsSave");
-const resultsRestartButton = document.getElementById("resultsSave");
-const resultsQuitButton = document.getElementById("resultsQuit");
+const resultsRestartButton = document.getElementById("resultsRestart");
 const resultsBest = document.getElementById("resultsBest");
 const userName = document.getElementById("userName");
 const userScore = document.getElementById("userScore");
@@ -44,6 +43,10 @@ qrContinueButton.onclick = ()=>{
     countDown(fiveMinutes);
 }
 
+resultsRestartButton.onclick = ()=>{
+    location.reload();
+}
+
 // changes color back to original on wrong answer
 answers.addEventListener("click", function(){
     var self = quizBody;
@@ -57,17 +60,21 @@ resultsSaveButton.addEventListener("click", function(event){
     event.preventDefault();
     let highScorers = [];
     let highScoreName = userNameInput.value.trim();
+    // localStorage.setItem('correctAnswers', correctAnswerCount);
 
     if(highScoreName === ""){
         return;
     }
     
     highScorers = JSON.parse(localStorage.getItem("highScorers")) || [];
-    highScorers.push(highScoreName);
+    highScorers.push(highScoreName + " : " + correctAnswerCount);
     localStorage.setItem("highScorers", JSON.stringify(highScorers));
+
     userNameInput.value = "";
 
 })
+
+
 
 // retrieve questions from array of stored question objects and innerText to display in body
 function retrieveQuestion(index){
@@ -130,13 +137,18 @@ function countDown(duration) {
                 console.log("QUIZ COMPLETE")
                 quizResultsReveal();
                 let storedNames = JSON.parse(localStorage.getItem("highScorers"))
-                console.log(storedNames[3])
-
+                // console.log(storedNames[3])
                 for (i=0; i < storedNames.length; i++){
-                    resultsBest.innerText =  storedNames[i];
+                    let ul = document.getElementById("highScorePlacement");
+                    let name = storedNames[i];
+                    let li = document.createElement("li");
+
+                    li.appendChild(document.createTextNode(name));
+                    ul.appendChild(li);
                 }
             }
-}
+
+        }    
     }, 1000);
 
 }

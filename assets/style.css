@@ -319,10 +319,17 @@ body {
     justify-content: space-between;
 }
 
-#resultsBest p {
+#resultsBest ul h1 {
+    display: flex;
+    text-decoration: underline;
+    flex-direction: column;
     font-weight: bold;
-    padding: 0 4px;
+    padding: 5px 4px;
     font-size: 15px;
+}
+
+#resultsBest li {
+    text-align: center;
 }
 
 .resultsButtons {
