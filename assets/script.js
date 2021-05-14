@@ -10,6 +10,7 @@ const answerB = document.getElementById("answerB");
 const answerC = document.getElementById("answerC");
 const answerD = document.getElementById("answerD");
 const totalQuestions = document.getElementById("totalQuestions");
+const resultsTotalQuestions = document.getElementById("resultsTotalQuestions");
 const answerChoices = document.querySelectorAll("choice");
 const timerClock = document.getElementById("timerTime");
 const quizResults = document.getElementById("quizResults");
@@ -43,6 +44,7 @@ qrContinueButton.onclick = ()=>{
     countDown(fiveMinutes);
 }
 
+// reloads the page to start over again
 resultsRestartButton.onclick = ()=>{
     location.reload();
 }
@@ -56,13 +58,16 @@ answers.addEventListener("click", function(){
     }, 150);
 })
 
+// creates an array of high scorers trying to save their score into local storage to be retrieved later for comparison
 resultsSaveButton.addEventListener("click", function(event){
     event.preventDefault();
     let highScorers = [];
     let highScoreName = userNameInput.value.trim();
     // localStorage.setItem('correctAnswers', correctAnswerCount);
 
+    // user must put in a name or storing will not happen and tells player to put in a name
     if(highScoreName === ""){
+        alert("Please enter your name if you wish to save!");
         return;
     }
     
@@ -73,8 +78,6 @@ resultsSaveButton.addEventListener("click", function(event){
     userNameInput.value = "";
 
 })
-
-
 
 // retrieve questions from array of stored question objects and innerText to display in body
 function retrieveQuestion(index){
@@ -94,11 +97,13 @@ function retrieveQuestion(index){
 
     // keeps track of question count
     totalQuestions.innerText = quizBank[index].number + " out of " + quizBank.length + " Questions"
+    resultsTotalQuestions.innerText = quizBank.length;
 }
 
 // time starting function sets to duration to be filled by fiveMinutes defined on line 19
 function countDown(duration) {
     var timer = duration, minutes, seconds;
+    // interval function to mimic countdown set to minutes and seconds
     setInterval(function () {
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
@@ -108,25 +113,27 @@ function countDown(duration) {
 
         timerClock.innerText = minutes + ":" + seconds;
 
+        // ends quiz if time hits 0
         if (--timer < 0) {
             timer = duration;
-
+            quizResultsReveal();
         }
         // on choosing an answer display the next question and also flash red if answer is wrong
         answers.onclick = (e)=>{
             //checks for user answer by equating clicked line item by its assigned data-value to be compared with correctAnswer value
             userAnswer = e.target.getAttribute('data-value');
             correctAnswer = quizBank[quizBankIndex].correctAnswer;
-
+            
+            // flashes green if correct answer and stores it to be called so it can be concatenate with username before being stored
             if(userAnswer == correctAnswer){
                 chgColorRight();
                 correctAnswerCount++;
-                console.log(correctAnswerCount);
                 localStorage.setItem('correctAnswers', correctAnswerCount);
             }
+            // decreases time by 3 seconds if wrong answer and flashes red
             if(userAnswer != correctAnswer){
                 chgColorWrong();
-                timer -= 3;
+                timer -= 30;
             }
 
             if(quizBankIndex < quizBank.length -1){
@@ -134,10 +141,10 @@ function countDown(duration) {
                 retrieveQuestion(quizBankIndex);
             }
             else{
-                console.log("QUIZ COMPLETE")
                 quizResultsReveal();
                 let storedNames = JSON.parse(localStorage.getItem("highScorers"))
-                // console.log(storedNames[3])
+                
+                // iterates over stored names and appends new player to display under high score column
                 for (i=0; i < storedNames.length; i++){
                     let ul = document.getElementById("highScorePlacement");
                     let name = storedNames[i];
@@ -168,14 +175,6 @@ function chgColorWrong(){
 function chgColorRight(){
     quizBody.style.backgroundColor = "green";
 }
-
-// displays stored high scorers in local storage
-
-
-
-// 6. if all questions are answered correctly or timer hits 0 game is over
-// 7. when game is over present input for option to store score for local storage
-
 
 // -------------------------QUIZ BANK BEGIN----------------------------------------
 
@@ -213,7 +212,82 @@ const quizBank = [
         },
         correctAnswer: "d"
     },
-    
+    {
+        number: "4",
+        question: "How do you find the minimum of x and y using JavaScript?",
+        answers: {
+            a: "min(x,y);",
+            b: "Math.min(x,y);",
+            c: "Math.min(xy);",
+            d: "min(xy);"
+        },
+        correctAnswer: "d"
+    },
+    {
+        number: "5",
+        question: "Which JavaScript label catches all the values, except for the ones specified?",
+        answers: {
+            a: "catch",
+            b: "label",
+            c: "try",
+            d: "default"
+        },
+        correctAnswer: "d"
+    },
+    {
+        number: "6",
+        question: "Which are the correct 'if' statements to execute certain code if 'x' is equal to 2?",
+        answers: {
+            a: "if(x 2)",
+            b: "if(x = 2)",
+            c: "if(x == 2)",
+            d: "if(x != 2 )"
+        },
+        correctAnswer: "c"
+    },
+    {
+        number: "7",
+        question: "What will this code return? 'Boolean(3<7)'",
+        answers: {
+            a: "true",
+            b: "false",
+            c: "NaN",
+            d: "SyntaxError"
+        },
+        correctAnswer: "a"
+    },
+    {
+        number: "8",
+        question: "Which is the correct JavaScript syntax to change this HTML content? 'Hello World!'",
+        answers: {
+            a: "document.getElementById(“test”).innerHTML = “Hello DataFlair!”;",
+            b: "document.getElementsById(“test”).innerHTML = “Hello DataFlair!”;",
+            c: "document.getElementById(test).innerHTML = “Hello DataFlair!”;",
+            d: "document.getElementByTagName(“p”)[0].innerHTML = “Hello DataFlair!”;"
+        },
+        correctAnswer: "a"
+    },
+    {
+        number: "9",
+        question: "Inside which HTML element do we put the JavaScript?",
+        answers: {
+            a: "<javascript>",
+            b: "<script>",
+            c: "<scripting>",
+            d: "<js>"
+        },
+        correctAnswer: "b"
+    },
+    {
+        number: "10",
+        question: "How do you write an 'if' statement for executing some code if 'i' is NOT equal to 5?",
+        answers: {
+            a: "if (i != 5)",
+            b: "if i =! 5 then",
+            c: "if i <> 5",
+            d: "if (i <> 5)"
+        },
+        correctAnswer: "a"
+    },
 ]
-
 // -------------------------END OF QUIZ BANK-------------------------------------

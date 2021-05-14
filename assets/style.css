@@ -330,6 +330,7 @@ body {
 
 #resultsBest li {
     text-align: center;
+    padding: 5px 4px;
 }
 
 .resultsButtons {
