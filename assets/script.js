@@ -73,10 +73,18 @@ resultsSaveButton.addEventListener("click", function(event){
     
     highScorers = JSON.parse(localStorage.getItem("highScorers")) || [];
     highScorers.push(highScoreName + " : " + correctAnswerCount);
+
+    // immediately generate high score saved and display on the score board before being stored away on local storage for next run
+    let ul = document.getElementById("highScorePlacement");
+    let name = highScoreName + " : " + correctAnswerCount;
+    let li = document.createElement("li");
+
+    li.appendChild(document.createTextNode(name));
+    ul.appendChild(li);
+
     localStorage.setItem("highScorers", JSON.stringify(highScorers));
 
     userNameInput.value = "";
-
 })
 
 // retrieve questions from array of stored question objects and innerText to display in body
@@ -145,7 +153,7 @@ function countDown(duration) {
                 let storedNames = JSON.parse(localStorage.getItem("highScorers"))
                 
                 // iterates over stored names and appends new player to display under high score column
-                for (i=0; i < storedNames.length; i++){
+                for (let i=0; i < storedNames.length; i++){
                     let ul = document.getElementById("highScorePlacement");
                     let name = storedNames[i];
                     let li = document.createElement("li");
